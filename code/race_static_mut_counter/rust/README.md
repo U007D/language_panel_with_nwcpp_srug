@@ -1,13 +1,14 @@
-# concurrent_inc_1  (concurrent increment v1)
+# language_panel_with_nwcpp_srug
 ## Purpose
 * Explain the purpose of locks (concurrency synchronization primitive)
 * Demonstrate memory management (managing of allocations)
 * Properly handle errors
 * Use idiomatic Rust
 
-- v1 disables Rust's data race safety guarantees to illustrate the problem.
-- v2 uses locks to eliminate the data race data loss introduced in v2.
-- v3 uses `Atomic`s to achieve the same effect with less code to maintain.
+- `race_static_mut_counter` bypasses (contains UB!) Rust's data race safety guarantees to illustrate the problem.
+- `race_allocated_counter` bypasses (contains UB!) Rust's data race safety guarantees to illustrate the problem.
+- `lock_allocated_counter` uses locks to eliminate the data race data loss introduced in v2.
+- `atomic_allocated_counter` uses `Atomic`s to achieve the same effect with less code to maintain.
 
 ## License
 Licensed under either:
