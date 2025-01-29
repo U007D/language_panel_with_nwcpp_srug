@@ -5,7 +5,7 @@
 * Properly handle errors
 * Use idiomatic Rust
 
-- `race_static_mut_counter` bypasses (contains UB!) Rust's data race safety guarantees to illustrate the problem.
+- `race_global_mut_counter` bypasses (contains UB!) Rust's data race safety guarantees to illustrate the problem.
 - `race_allocated_counter` bypasses (contains UB!) Rust's data race safety guarantees to illustrate the problem.
 - `lock_allocated_counter` uses locks to eliminate the data race data loss introduced in v2.
 - `atomic_allocated_counter` uses `Atomic`s to achieve the same effect with less code to maintain.

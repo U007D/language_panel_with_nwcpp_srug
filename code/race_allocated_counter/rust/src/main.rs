@@ -8,23 +8,23 @@ use std::{cell::SyncUnsafeCell,
 
 use error::Result;
 
-const THREADS: usize = 100;
+const N_THREADS: usize = 100;
 const INCS_PER_THREAD: usize = 10_000;
 
 fn main() -> Result<()> {
     let counter = SyncUnsafeCell::new(0);
 
-    println!("Spawning {THREADS} threads to increment heap-allocated `count` {INCS_PER_THREAD} \
+    println!("Spawning {N_THREADS} threads to increment heap-allocated `count` {INCS_PER_THREAD} \
               times each...");
 
     // Do the counting
     concurrent_count(&counter)?;
 
     // Every `counter` access (even "just" a read) is `unsafe`
-    #[allow(static_mut_refs, unsafe_code)]
+    #[allow(global_mut_refs, unsafe_code)]
     unsafe {
         println!("Expected total count: {}; Actual count: {}",
-                 THREADS * INCS_PER_THREAD,
+                 N_THREADS * INCS_PER_THREAD,
                  *counter.get());
     };
 
@@ -47,7 +47,7 @@ fn concurrent_count(counter_ref: &SyncUnsafeCell<u64>) -> Result<()> {
         // Create a slice of handles to track each of the threads we create.  Use them to wait until all
         // of them have completed.
         let join_handles =
-            (0..THREADS).fold(Vec::with_capacity(THREADS), |mut handles_acc, _i| {
+            (0..N_THREADS).fold(Vec::with_capacity(N_THREADS), |mut handles_acc, _i| {
                 #[allow(unsafe_code)]
                 let handle =
                     scope.spawn(move || increment(counter_ref));

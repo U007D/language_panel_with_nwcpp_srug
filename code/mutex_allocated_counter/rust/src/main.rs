@@ -11,7 +11,7 @@ use std::{
 
 use error::Result;
 
-const THREADS: usize = 100;
+const N_THREADS: usize = 100;
 const INCS_PER_THREAD: usize = 10_000;
 
 fn main() -> Result<()> {
@@ -19,7 +19,7 @@ fn main() -> Result<()> {
     let counter = Mutex::new(0);
 
     println!(
-        "Spawning {THREADS} threads to increment heap-allocated `count` {INCS_PER_THREAD} \
+        "Spawning {N_THREADS} threads to increment heap-allocated `count` {INCS_PER_THREAD} \
               times each..."
     );
 
@@ -29,7 +29,7 @@ fn main() -> Result<()> {
     // Accessing a synchronized (i.e. via a lock) shared resource is safe.
     println!(
         "Expected total count: {}; Actual count: {}",
-        THREADS * INCS_PER_THREAD,
+        N_THREADS * INCS_PER_THREAD,
         *counter.lock()?
     );
 
@@ -52,7 +52,7 @@ fn concurrent_count(counter_ref: &Mutex<u64>) -> Result<()> {
     thread::scope(|scope| {
         // Create a slice of handles to track each of the threads we create.  Use them to wait until all
         // of them have completed.
-        let join_handles = (0..THREADS).fold(Vec::with_capacity(THREADS), |mut handles_acc, _i| {
+        let join_handles = (0..N_THREADS).fold(Vec::with_capacity(N_THREADS), |mut handles_acc, _i| {
             #[allow(unsafe_code)]
             let handle = scope.spawn(|| increment(counter_ref));
             handles_acc.push(handle);
